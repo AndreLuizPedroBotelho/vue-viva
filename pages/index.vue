@@ -7,6 +7,8 @@
       <span class="glyphicon glyphicon-plus"></span>
       Adicionar Cliente
     </nuxt-link>
+    <b-button type="button" @click="csvExport(csvData)" variant="primary">Exportar</b-button>
+
 
     <b-col cols="12">
       <mdb-datatable :data="data" striped bordered />
@@ -21,7 +23,7 @@ import { mdbDatatable } from "mdbvue"
 export default {
   components: {
     LayoutPlugin,
-    mdbDatatable
+    mdbDatatable,
   },
   data() {
     return {
@@ -63,7 +65,16 @@ export default {
           }
         ],
         rows: []
-      }
+      },    
+      clientes: [],
+    }
+  },
+  computed: {
+    csvData() {
+      return this.clientes.map(item => ({
+        ...item,
+
+      }));
     }
   },
   mounted() {
@@ -71,6 +82,11 @@ export default {
       .get("http://localhost:4300/clientes")
       .then(response => {
         response.data.forEach(function(obj) {
+          const cliente = Object.assign({}, obj);
+          cliente.dtNascimento = new Date(cliente.dtNascimento)
+          cliente.dtNascimento = cliente.dtNascimento.toLocaleDateString()
+          this.clientes.push(cliente)
+
           obj.dtNascimento = new Date(obj.dtNascimento)
           obj.dtNascimento = obj.dtNascimento.toLocaleDateString()
 
@@ -83,6 +99,23 @@ export default {
           this.data.rows.push(obj)
         }, this)
       }, this)
+  },
+    methods: {
+    csvExport(arrData) {
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += [
+        Object.keys(arrData[0]).join(";"),
+        ...arrData.map(item => Object.values(item).join(";"))
+      ]
+        .join("\n")
+        .replace(/(^\[)|(\]$)/gm, "");
+
+      const data = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", data);
+      link.setAttribute("download", "export.csv");
+      link.click();
+    }
   },
   openEdit() {
     this.$router.push("/edit")
