@@ -6,9 +6,9 @@
       </nuxt-link>
     </b-col>
     <b-col>
-      <h2 class="text-left">Deseja Exluir</h2>
-      <h3>Deseja realmente deletar o cliente {{cliente.nome}}</h3>
-      <b-button @click="excluirCliente" type="submit" class="float-center" variant="danger">Exluir</b-button>
+      <h2 class="text-left">Deseja Excluir</h2>
+      <h3>Deseja realmente deletar o cliente {{cliente.nome}}?</h3>
+      <b-button @click="excluirCliente" type="submit" class="float-center" variant="danger">Excluir</b-button>
       <b-button :to="{path: '/'}" type="submit" class="float-center" variant="primary">Cancelar</b-button>
     </b-col>
   </div>

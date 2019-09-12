@@ -6,7 +6,7 @@
       </nuxt-link>
     </b-col>
     <b-form @submit="onSubmit">
-      <h2 class="text-left">Cadatrar Cliente</h2>
+      <h2 class="text-left">Cadastrar Cliente</h2>
 
       <cliente-form :cliente="cliente" :status="status"></cliente-form>
 
