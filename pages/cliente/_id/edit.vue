@@ -45,15 +45,6 @@ export default {
       .get(`http://localhost:4300/clientes/${idCliente}`)
       .then(response => {
         this.cliente = response.data
-        let dtNascimento = new Date(this.cliente.dtNascimento)
-        let month = "" + (dtNascimento.getMonth() + 1)
-        let day = "" + dtNascimento.getDate()
-        let year = dtNascimento.getFullYear()
-
-        if (month.length < 2) month = "0" + month
-        if (day.length < 2) day = "0" + day
-
-        this.cliente.dtNascimento = [year, month, day].join("-")
       })
   },
   methods: {

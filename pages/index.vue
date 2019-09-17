@@ -9,7 +9,6 @@
     </nuxt-link>
     <b-button type="button" @click="csvExport(csvData)" variant="primary">Exportar</b-button>
 
-
     <b-col cols="12">
       <mdb-datatable :data="data" striped bordered />
     </b-col>
@@ -23,7 +22,7 @@ import { mdbDatatable } from "mdbvue"
 export default {
   components: {
     LayoutPlugin,
-    mdbDatatable,
+    mdbDatatable
   },
   data() {
     return {
@@ -65,16 +64,15 @@ export default {
           }
         ],
         rows: []
-      },    
-      clientes: [],
+      },
+      clientes: []
     }
   },
   computed: {
     csvData() {
       return this.clientes.map(item => ({
-        ...item,
-
-      }));
+        ...item
+      }))
     }
   },
   mounted() {
@@ -82,13 +80,17 @@ export default {
       .get("http://localhost:4300/clientes")
       .then(response => {
         response.data.forEach(function(obj) {
-          const cliente = Object.assign({}, obj);
-          cliente.dtNascimento = new Date(cliente.dtNascimento)
-          cliente.dtNascimento = cliente.dtNascimento.toLocaleDateString()
+          const cliente = Object.assign({}, obj)
+          cliente.dtNascimento = cliente.dtNascimento.split("-")
+          cliente.dtNascimento = `${cliente.dtNascimento[2]}/${
+            cliente.dtNascimento[1]
+          }/${cliente.dtNascimento[0]}`
           this.clientes.push(cliente)
 
-          obj.dtNascimento = new Date(obj.dtNascimento)
-          obj.dtNascimento = obj.dtNascimento.toLocaleDateString()
+          obj.dtNascimento = obj.dtNascimento.split("-")
+          obj.dtNascimento = `${obj.dtNascimento[2]}/${obj.dtNascimento[1]}/${
+            obj.dtNascimento[0]
+          }`
 
           obj.action = `<a href="/cliente/${obj.id}/edit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span>
             Editar 
@@ -100,21 +102,21 @@ export default {
         }, this)
       }, this)
   },
-    methods: {
+  methods: {
     csvExport(arrData) {
-      let csvContent = "data:text/csv;charset=utf-8,";
+      let csvContent = "data:text/csv;charset=utf-8,"
       csvContent += [
         Object.keys(arrData[0]).join(";"),
         ...arrData.map(item => Object.values(item).join(";"))
       ]
         .join("\n")
-        .replace(/(^\[)|(\]$)/gm, "");
+        .replace(/(^\[)|(\]$)/gm, "")
 
-      const data = encodeURI(csvContent);
-      const link = document.createElement("a");
-      link.setAttribute("href", data);
-      link.setAttribute("download", "export.csv");
-      link.click();
+      const data = encodeURI(csvContent)
+      const link = document.createElement("a")
+      link.setAttribute("href", data)
+      link.setAttribute("download", "export.csv")
+      link.click()
     }
   },
   openEdit() {
